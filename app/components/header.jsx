@@ -6,16 +6,14 @@ export class Header extends React.Component {
     }
     render() {
         return(
-            <React.Fragment>
-                <head>
-                    <title>My App</title>
-                </head>
-                <body>
-                    <div>
-                        My Buddy is
-                    </div>
-                </body>
-            </React.Fragment>
+            <header>
+                <h1>
+                    Welcome to Chuked Application
+                </h1>
+                <div>
+                    Authors : Best buddies.
+                </div>
+            </header>
         );
     }
 }

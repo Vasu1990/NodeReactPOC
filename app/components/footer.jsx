@@ -6,13 +6,9 @@ export class Footer extends React.Component {
     }
     render() {
         return(
-            <React.Fragment>
-                <footer>
-                    <div>
-                        Vasu Miral Sapient
-                    </div>
-                </footer>
-            </React.Fragment>
+            <footer>
+                <h2>Hope we made our point clear</h2>
+            </footer>
         );
     }
 }
