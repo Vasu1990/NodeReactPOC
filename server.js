@@ -17,11 +17,15 @@ server.use(bodyParser.json());
 server.use(express.static('./public'));
 
 server.get("/home",(req,res) => {
+	res.set({
+		'Content-Type': 'text/html; charset=UTF-8', //This is done to overcome the issue of minimum number of bytes needed to render the DOM in firefox.
+	});
 	res.write(`<!DOCTYPE html>
-		<html>${renderToString(<Head/>)}`);
-	res.write(`<body>${renderToString(<Header />)}`);
+		<html>${renderToString(<Head/>)}<br />`);
+	res.write(`<body>${renderToString(<Header />)}<br />`);
 	setTimeout(() => {
 		res.write(renderToString(<MainContent data={Data.getData()} />));
+		res.write(`<br />`);
 	},2000);
 	setTimeout(() => {
 		res.write(`${renderToString(<Footer />)}</body></html>`);
