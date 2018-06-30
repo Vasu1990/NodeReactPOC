@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import  bodyParser from 'body-parser';
+import React from 'react';
 import {renderToString} from 'react-dom/server';
 import {Header} from './app/components/header.jsx';
 import {Footer} from './app/components/footer.jsx';
@@ -14,18 +15,9 @@ server.use(bodyParser.json());
 server.use(express.static('./public'));
 
 server.get("/home",(req,res) => {
-	res.write(`
-	<html>
-		<head>
-			<title>Vasu Nagpal</title>
-		</head>
-		<body> My buddy
-	</html>
-	`);
+	res.write(renderToString(<Header/>));
 	setTimeout(() => {
-		res.write(`
-		Buddy is Cute</body></html>
-		`);
+		res.write(renderToString(<Footer />));
 		res.end();
 	},5000);
 });

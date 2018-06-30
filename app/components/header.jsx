@@ -1,4 +1,4 @@
-const React = require('react');
+import React from 'react';
 
 export class Header extends React.Component {
     constructor(props) {
@@ -11,9 +11,9 @@ export class Header extends React.Component {
                     <title>My App</title>
                 </head>
                 <body>
-                    <ul>
-                        {this.props.map(itm => <li>{itm}</li>)}
-                    </ul>
+                    <div>
+                        My Buddy is
+                    </div>
                 </body>
             </React.Fragment>
         );

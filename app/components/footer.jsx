@@ -1,4 +1,4 @@
-const React = require('react');
+import React from 'react';
 
 export class Footer extends React.Component {
     constructor(props) {
@@ -8,9 +8,9 @@ export class Footer extends React.Component {
         return(
             <React.Fragment>
                 <footer>
-                    <ul>
-                        {this.propa.data.map(itm => <li>{itm}</li>)}
-                    </ul>
+                    <div>
+                        Vasu Miral Sapient
+                    </div>
                 </footer>
             </React.Fragment>
         );
