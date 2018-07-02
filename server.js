@@ -32,6 +32,16 @@ server.get("/chunked",(req,res) => {
 	},4000);
 });
 
+server.get("/nonchunked",(req,res) => {
+	res.set({
+		'Content-Type': 'text/html; charset=UTF-8', //This is done to overcome the issue of minimum number of bytes needed to render the DOM in firefox.
+	});
+	setTimeout(() => {
+		res.send(`<!DOCTYPE html>
+		<html>${renderToString(<Head/>)}<body>${renderToString(<Header />)}${renderToString(<MainContent data={Data.getData()} />)}${renderToString(<Footer />)}</body></html>`)
+	},6000);
+})
+
 
 server.listen(port,()=>{
 	console.log("express server is listing on configured port "+port);
