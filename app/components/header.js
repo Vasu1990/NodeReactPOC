@@ -1,10 +1,7 @@
 import React from 'react';
-import {Data} from '../../public/data.js';
 
 export class Header extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+
     render() {
         return(
             <header>
