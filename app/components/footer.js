@@ -4,7 +4,8 @@ export class Footer extends React.Component {
     render() {
         return(
             <footer>
-                <h2>Hope we made our point clear</h2>
+                <h2>End of chunked App</h2>
+                <a href="/">Home</a>
             </footer>
         );
     }

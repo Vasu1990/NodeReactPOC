@@ -4,7 +4,7 @@ export class Head extends React.Component {
     render() {
         return(
             <head>
-                <title>My App</title>
+                <title>CHUNKED POC</title>
                 <link rel="stylesheet" type="text/css" href="/style.css"/>
             </head>
         );

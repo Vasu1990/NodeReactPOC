@@ -10,7 +10,7 @@ export class Header extends React.Component {
                     Welcome to Chuked Application
                 </h1>
                 <div>
-                    Authors : Best buddies.
+                   <a  onClick={() => alert("event attached")}>Action : Click me!</a> 
                 </div>
             </header>
         );
