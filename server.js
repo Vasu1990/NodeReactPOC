@@ -59,6 +59,40 @@ server.get("/isomorphic",(req,res) => {
 	</HtmlCustom>).pipe(res);
 });
 
+/**
+ * Isomorphism with chunking and without the use of SetTimeOut. We can remove renderToNodeStream and use renderToString instead.
+ */
+
+server.get("/isomorphicHarnoor",(req,res) => {
+	const dat = JSON.stringify(data);
+	res.write(`<!DOCTYPE html>
+		<html>${renderToString(<Head/>)}`);
+	res.write(`<body><div id="root">${renderToString(<Header />)}`);
+	const stream = ReactDOMServer.renderToNodeStream(<MainContent data={Data.getData()}/>);
+	stream.pipe(res, {end:false});
+	stream.on('end',()=> {
+		res.write(`${renderToString(<Footer />)}</div>
+			</body>
+			<script>
+				window.data = ${dat}
+			</script>
+			<script src="../../bundle.js"></script>
+			</html>`);
+		res.end();
+	});
+});
+
+server.get("/revalidate",(req,res) => {
+	res.write(`<!DOCTYPE html>
+		<html>${renderToString(<Head/>)}`);
+	res.write(`<body><div id="root">${renderToString(<Header />)}`);
+	res.write(renderToString(<MainContent data={Data.getData()}/>));
+	res.write(`${renderToString(<Footer />)}</div>
+		</body>
+		</html>`);
+	res.end();
+});
+
 server.listen(port,()=>{
 	console.log("express server is listing on configured port "+port);
 });

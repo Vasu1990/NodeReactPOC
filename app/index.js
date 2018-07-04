@@ -1,7 +1,12 @@
 import React from 'react';
-import  {render} from "react-dom";
+import  {hydrate} from "react-dom";
 
 import App from "./components/App"
 
-const data = JSON.parse(document.getElementById('initial-data').getAttribute('data-json'));
-render(<App content ={data}/>, document.getElementById('root'));
+var data;
+if(window.data) {
+    data = window.data;
+} else {
+    data = JSON.parse(document.getElementById('initial-data').getAttribute('data-json'));
+}
+hydrate(<App content ={data}/>, document.getElementById('root'));
