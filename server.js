@@ -63,7 +63,7 @@ server.get("/isomorphic",(req,res) => {
  * Isomorphism with chunking and without the use of SetTimeOut. We can remove renderToNodeStream and use renderToString instead.
  */
 
-server.get("/isomorphicHarnoor",(req,res) => {
+server.get("/isomorphic-chunked-stream",(req,res) => {
 	const dat = JSON.stringify(data);
 	res.write(`<!DOCTYPE html>
 		<html>${renderToString(<Head/>)}`);
@@ -82,16 +82,26 @@ server.get("/isomorphicHarnoor",(req,res) => {
 	});
 });
 
-server.get("/revalidate",(req,res) => {
+server.get("/isomorphic-chunked-string",(req,res) => {
+	const dat = JSON.stringify(data);
+	res.set({
+		'Content-Type': 'text/html; charset=UTF-8', //This is done to overcome the issue of minimum number of bytes needed to render the DOM in firefox.
+	});
 	res.write(`<!DOCTYPE html>
 		<html>${renderToString(<Head/>)}`);
 	res.write(`<body><div id="root">${renderToString(<Header />)}`);
-	res.write(renderToString(<MainContent data={Data.getData()}/>));
+	res.write(renderToString(<MainContent data={Data.getData()} />));
 	res.write(`${renderToString(<Footer />)}</div>
-		</body>
-		</html>`);
+	</body>
+	<script>
+		window.data = ${dat}
+	</script>
+	<script src="../../bundle.js"></script>
+	</html>`);
 	res.end();
 });
+
+
 
 server.listen(port,()=>{
 	console.log("express server is listing on configured port "+port);
