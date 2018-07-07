@@ -1,6 +1,5 @@
 import React from 'react';
-
-
+import request from 'superagent';
 
 export class MainContent extends React.Component {
 
@@ -8,24 +7,30 @@ export class MainContent extends React.Component {
         super();
     }
 
-    sleep(milliseconds) {
-        var arr = [];
-        for (var i = 0; i < 166666; i++) {
-            arr.push("<li>'Please chal ja'</li>");
-        }
-        return arr;
-      }
-
     render() {
         return(
-            <React.Fragment>
-                <div style={{display: 'none'}}>
-                    {this.sleep(3000)}
-                </div>
-                <ul>
-                    {this.props.data.map((itm,idx) => <li key={idx}>{itm}</li>)}
-                </ul>
-            </React.Fragment>
+            <table className="table">
+                <thead className="thead-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Avatar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {this.props.data.map((itm,idx) => {
+                        return(
+                            <tr key={itm.first_name}>
+                                <td key={itm.id}>{itm.id}</td>
+                                <td key={itm.first_name}>{itm.first_name}</td>
+                                <td key={itm.last_name}>{itm.last_name}</td>
+                                <td key={itm.avatar}><img src={itm.avatar}/></td>
+                            </tr>
+                        )
+                    })}
+                </tbody>
+            </table>
         );
     }
 }

@@ -9,6 +9,7 @@ import {Head} from './app/components/head';
 import {Header} from './app/components/header';
 import {MainContent} from './app/components/mainContent';
 import {Footer} from './app/components/footer';
+import request from 'superagent';
 
 import {Data} from './app/data.js';
 
@@ -27,13 +28,9 @@ server.get("/chunked",(req,res) => {
 	res.write(`<!DOCTYPE html>
 		<html>${renderToString(<Head/>)}`);
 	res.write(`<body>${renderToString(<Header />)}`);
-	setTimeout(() => {
-		res.write(renderToString(<MainContent data={Data.getData()} />));
-	},2000);
-	setTimeout(() => {
-		res.write(`${renderToString(<Footer />)}</body></html>`);
-		res.end();
-	},4000);
+	res.write(renderToString(<MainContent data={Data.getData()} />));
+	res.write(`${renderToString(<Footer />)}</body></html>`);
+	res.end();
 });
 
 
@@ -42,10 +39,9 @@ server.get("/nonchunked",(req,res) => {
 	res.set({
 		'Content-Type': 'text/html; charset=UTF-8', //This is done to overcome the issue of minimum number of bytes needed to render the DOM in firefox.
 	});
-	setTimeout(() => {
-		res.send(`<!DOCTYPE html>
-		<html>${renderToString(<Head/>)}<body>${renderToString(<Header />)}${renderToString(<MainContent data={Data.getData()} />)}${renderToString(<Footer />)}</body></html>`)
-	},6000);
+	const stream = `<!DOCTYPE html>
+	<html>${renderToString(<Head/>)}<body>${renderToString(<Header />)}${renderToString(<MainContent data={Data.getData()} />)}${renderToString(<Footer />)}</body></html>`;
+	res.send(stream);
 });
 
 
@@ -63,24 +59,34 @@ server.get("/isomorphic",(req,res) => {
  * Isomorphism with chunking and without the use of SetTimeOut. We can remove renderToNodeStream and use renderToString instead.
  */
 
-server.get("/isomorphicHarnoor",(req,res) => {
-	const dat = JSON.stringify(data);
+var getHead = (req,res,next) => {
 	res.write(`<!DOCTYPE html>
 		<html>${renderToString(<Head/>)}`);
+	next();
+}
+
+var getHeader = (req,res,next) => {
 	res.write(`<body><div id="root">${renderToString(<Header />)}`);
-	const stream = ReactDOMServer.renderToNodeStream(<MainContent data={Data.getData()}/>);
-	stream.pipe(res, {end:false});
-	stream.on('end',()=> {
-		res.write(`${renderToString(<Footer />)}</div>
-			</body>
-			<script>
-				window.data = ${dat}
-			</script>
-			<script src="../../bundle.js"></script>
-			</html>`);
-		res.end();
+	next();
+}
+
+var getMainContent = (req,res,next) => {
+	request.get("https://reqres.in/api/users?delay=3").then(response => {
+		res.write(`${renderToString(<MainContent data={response.body.data} />)}
+		<script>window.mainContent=${JSON.stringify(response.body.data)}</script>`);
+		next();
 	});
-});
+}
+
+var getFooter = (req,res,next) => {
+	res.write(`${renderToString(<Footer />)}</div>
+		</body>
+		<script src="../../bundle.js"></script>
+		</html>`);
+	res.end();
+}
+
+server.get("/isomorphicHarnoor",[getHead,getHeader,getMainContent,getFooter]);
 
 server.get("/revalidate",(req,res) => {
 	res.write(`<!DOCTYPE html>
@@ -92,6 +98,15 @@ server.get("/revalidate",(req,res) => {
 		</html>`);
 	res.end();
 });
+
+server.get("/reactDoingNothing",(req,res) => {
+	res.set({
+		'Content-Type': 'text/html; charset=UTF-8', //This is done to overcome the issue of minimum number of bytes needed to render the DOM in firefox.
+	});
+	const stream = `<!DOCTYPE html>
+	<html>${Data.getHead()}<body>${Data.getHeader()}${Data.getMain()}${Data.getfooter()}</body></html>`;
+	res.send(stream);
+})
 
 server.listen(port,()=>{
 	console.log("express server is listing on configured port "+port);
