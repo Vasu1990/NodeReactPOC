@@ -18,6 +18,8 @@ const port = process.env.PORT || 8080 ,
 server = express() ,
 data = Data.getData();
 
+let globalData = {};
+
 server.use(express.static('./public'));
 
 // page to show chunked data
@@ -72,15 +74,17 @@ var getHeader = (req,res,next) => {
 
 var getMainContent = (req,res,next) => {
 	request.get("https://reqres.in/api/users?delay=3").then(response => {
-		res.write(`${renderToString(<MainContent data={response.body.data} />)}
-		<script>window.mainContent=${JSON.stringify(response.body.data)}</script>`);
+		res.write(`${renderToString(<MainContent data={response.body.data} />)}`);
+		globalData = response.body.data;
 		next();
 	});
 }
 
-var getFooter = (req,res,next) => {
+var getFooter = (req,res) => {
 	res.write(`${renderToString(<Footer />)}</div>
 		</body>
+		<script>window.no=12</script>
+		<script>window.mainContent=${JSON.stringify(globalData)}</script>		
 		<script src="../../bundle.js"></script>
 		</html>`);
 	res.end();
