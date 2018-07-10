@@ -15,7 +15,7 @@ import {Data} from './app/data.js';
 
 
 const port = process.env.PORT || 8080 ,
-server = express() ,
+server = express(),
 data = Data.getData();
 
 let globalData = {};
@@ -51,10 +51,13 @@ server.get("/nonchunked",(req,res) => {
 	ToDo:send data in chunks
 */ 
 server.get("/isomorphic",(req,res) => {
-	ReactDOMServer.renderToNodeStream(
-	<HtmlCustom initialData={JSON.stringify(data)}>
-		<App content = {data}/>
-	</HtmlCustom>).pipe(res);
+	request.get("https://reqres.in/api/users?delay=3").then(response => {
+		globalData = response.body.data;
+		ReactDOMServer.renderToNodeStream(
+			<HtmlCustom initialData={JSON.stringify(globalData)}>
+				<App content = {globalData}/>
+			</HtmlCustom>).pipe(res);
+	});
 });
 
 /**
@@ -90,7 +93,7 @@ var getFooter = (req,res) => {
 	res.end();
 }
 
-server.get("/isomorphicHarnoor",[getHead,getHeader,getMainContent,getFooter]);
+server.get("/isomorphic-chunked",[getHead,getHeader,getMainContent,getFooter]);
 
 server.get("/revalidate",(req,res) => {
 	res.write(`<!DOCTYPE html>
