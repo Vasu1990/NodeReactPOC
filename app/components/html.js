@@ -6,6 +6,7 @@ class Html extends React.Component {
 			<html>
 				<head>
 					<title>Chunked POC</title>
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossOrigin="anonymous"/>
 					<link rel="stylesheet" type="text/css" href="/style.css"/>
 				</head>
 				<body>
