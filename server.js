@@ -60,6 +60,9 @@ server.get("/isomorphic",(req,res) => {
  */
 
 var getHead = (req,res,next) => {
+	res.set({
+		'Content-Type': 'text/html; charset=UTF-8', //This is done to overcome the issue of minimum number of bytes needed to render the DOM in firefox.
+	});
 	res.write(`<!DOCTYPE html>
 		<html>${renderToString(<Head/>)}`);
 	next();
